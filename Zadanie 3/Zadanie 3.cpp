@@ -8,6 +8,7 @@ Proszę zaimplementować walidację wprowadzanych danych.
 #include <iostream>
 #include <string>
 #include <regex>
+#include <bitset>
 
 using namespace std;
 
@@ -53,14 +54,26 @@ void changeIDToInt(string IPInput, int* tab)
     }
 }
 
+void generateSubnet(int* IPArray, int* maskArray, int* subnetMask)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        bitset<8> IPBits(*(IPArray + i));
+        bitset<8> maskBits(*(maskArray + i));
+
+        bitset<8> subnetBits = (IPBits & maskBits);
+
+        *(subnetMask + i) = subnetBits.to_ulong();
+    }
+}
 
 int main()
 {
     //do polskich napisów
     setlocale(LC_ALL, "polish");
 
-    string IPAdress = "255.132.342.1";
-    string mask;
+    string IPAdress = "192.168.1.145";
+    string mask = "255.255.255.128";
 
     //cin >> IPAdress;
     //cin >> mask;
@@ -81,7 +94,10 @@ int main()
     changeIDToInt(IPAdress, IPArray);
     changeIDToInt(mask, maskArray);
 
+    int subnetMaskArray[4];
 
+    generateSubnet(IPArray, maskArray, subnetMaskArray);
 
+    //display
 
 }
