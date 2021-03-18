@@ -67,16 +67,37 @@ void generateSubnet(int* IPArray, int* maskArray, int* subnetMask)
     }
 }
 
+void displayIP(int IPArray[4], int maskArray[4], int subnetMask[4])
+{
+    cout << "W systemie dwójkowym: " << endl;
+    cout << "Adres IPv4: " << (bitset<8>)IPArray[0] << " " << (bitset<8>)IPArray[1] << " " << (bitset<8>)IPArray[2] << " " << (bitset<8>)IPArray[3] << endl;
+    cout << "Maska : " << (bitset<8>)maskArray[0] << " " << (bitset<8>)maskArray[1] << " " << (bitset<8>)maskArray[2] << " " << (bitset<8>)maskArray[3] << endl;
+    cout << "Maska podsieci: " << (bitset<8>)subnetMask[0] << " " << (bitset<8>)subnetMask[1] << " " << (bitset<8>)subnetMask[2] << " " << (bitset<8>)subnetMask[3] << endl;
+
+    cout << "W systemie dziesiętnym: " << endl;
+    cout << "Adres IPv4: " << IPArray[0] << "." << IPArray[1] << "." << IPArray[2] << "." << IPArray[3] << endl;
+    cout << "Maska : " << maskArray[0] << "." << maskArray[1] << "." << maskArray[2] << "." << maskArray[3] << endl;
+    cout << "Maska podsieci: " << subnetMask[0] << "." << subnetMask[1] << "." << subnetMask[2] << "." << subnetMask[3] << endl;
+
+    //użycie funkcji printf, by wyświetlić w systemie szesnastkowym
+    printf("W systemie szesnastkowym: \n");
+    printf("Adres IPv4: %x %x %x %x \n", IPArray[0], IPArray[1], IPArray[2], IPArray[3]);
+    printf("Maska: %x %x %x %x \n", maskArray[0], maskArray[1], maskArray[2], maskArray[3]);
+    printf("Maska podsieci: %x %x %x %x \n", subnetMask[0], subnetMask[1], subnetMask[2], subnetMask[3]);
+}
+
 int main()
 {
     //do polskich napisów
     setlocale(LC_ALL, "polish");
 
-    string IPAdress = "192.168.1.145";
-    string mask = "255.255.255.128";
+    string IPAdress;
+    string mask;
 
-    //cin >> IPAdress;
-    //cin >> mask;
+    //przykładowe inputy: 192.168.1.145 i 255.255.255.128  <- daje wynik 192.168.1.128
+
+    cin >> IPAdress;
+    cin >> mask;
 
     if (checkIfValidIP(IPAdress) && checkIfValidIP(mask))
     {
@@ -95,9 +116,8 @@ int main()
     changeIDToInt(mask, maskArray);
 
     int subnetMaskArray[4];
-
     generateSubnet(IPArray, maskArray, subnetMaskArray);
 
-    //display
+    displayIP(IPArray, maskArray, subnetMaskArray);
 
 }
