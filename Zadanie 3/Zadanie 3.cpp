@@ -33,9 +33,24 @@ bool checkIfValidIP(string IPInput)
     }
 }
 
-void changeIDToInt(string IPInput)
+void changeIDToInt(string IPInput, int* tab)
 {
+    string tempString;
 
+    int j = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        tempString = "";
+        while (j <= IPInput.length() && IPInput[j] != '.')
+        {
+            tempString += IPInput[j];
+            j++;
+        }
+        j++;
+        
+        //zamiana stringa na inta
+        *(tab + i) = stoi(tempString);
+    }
 }
 
 
@@ -44,11 +59,11 @@ int main()
     //do polskich napisów
     setlocale(LC_ALL, "polish");
 
-    string IPAdress;
+    string IPAdress = "255.132.342.1";
     string mask;
 
-    cin >> IPAdress;
-    cin >> mask;
+    //cin >> IPAdress;
+    //cin >> mask;
 
     if (checkIfValidIP(IPAdress) && checkIfValidIP(mask))
     {
@@ -58,8 +73,13 @@ int main()
     {
         cout << "Chociaż jeden z adresów jest niepoprawny." << endl;
     }
-   
+    
+    //wczytanie liczb z adresu
+    int IPArray[4];
+    int maskArray[4];
 
+    changeIDToInt(IPAdress, IPArray);
+    changeIDToInt(mask, maskArray);
 
 
 
