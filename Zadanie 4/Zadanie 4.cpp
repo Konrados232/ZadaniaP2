@@ -9,29 +9,46 @@
 
 using namespace std;
 
+void displayFoundExpression(smatch match)
+{
+    string expression = match.str(0);
+
+    expression = expression.substr(1, expression.size() - 1);
+
+    cout << expression << endl;
+}
+
+void searchForExpression(string text, regex mainRegex)
+{
+    smatch match;
+    while (regex_search(text, match, mainRegex))
+    {
+        displayFoundExpression(match);
+
+        text = match.suffix();
+    }
+}
 
 
 int main()
 {
-    string text = "  ewa    Ewa    eaaaw edfdfd   ewwwww   eeaaawwww   ffffwwwwwwraaaafafafaEwafaf   ";
+    setlocale(LC_ALL, "polish");
 
-    regex mainRegex("[^a-zA-Z][E|e]{1}[a-zA-Z]*[a]{1}[a-zA-Z]*");
+    //wyrażenie regularne znajduje wyraz, który poprzedza np. spacja lub przecinek, ale to zostaje uwzględnione w wypisywaniu
+    regex mainRegex("[^a-zA-Z](([a-df-zA-DF-Z][a-zA-Z]*[a]{1}[a-zA-Z]*)|[a]{1})");
 
-    smatch match;
+    //przykładowy tekst
+    //string text = "  ewa    Ewa    eaaaw edfdfd   ewwwww  ,a   a.. eeaaawwww   ,ffffwwwwwwraaaafafafaEwafaf Falafel, woda Ekologia eko";
 
-    while (regex_search(text, match, mainRegex))
+    int howMany = 3;
+    string text;
+
+    cout << "Wprowadź " << howMany << " wyrażenia: " << endl;
+
+    for (int i = 0; i < howMany; i++)
     {
-
-        cout << match[0] << endl;
-        /*
-        for (int i = 0; i < match.size(); i++)
-        {
-            cout << match[i];
-        }
-        */
-        cout << endl;
-
-        text = match.suffix();
+        getline(cin, text);
+        
+        searchForExpression(text, mainRegex);
     }
-
 }
