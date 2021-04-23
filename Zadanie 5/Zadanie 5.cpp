@@ -6,8 +6,21 @@ Proszę w programie zaimplementować testowe wywołania. */
 
 #include <iostream>
 #include <string>
+#include <locale>
 
 using namespace std;
+
+string upperCaseString(string word)
+{
+    string toReturn = word;
+    for (int i = 0; i < toReturn.length(); i++)
+    {
+        toReturn[i] = toupper(toReturn[i]);
+    }
+
+    return toReturn;
+}
+
 
 class Dziennik
 {
@@ -28,6 +41,50 @@ private:
         levelList[5] = "WARNING";
         levelList[6] = "SEVERE";
     }
+    
+    int findLevel(string lvl)
+    {
+        for (int i = 0; i < levelCount; i++)
+        {
+            if (upperCaseString(lvl) == levelList[i])
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    string messageNote = "Przekazana wiadomość to ";
+    string errorNoteOne = "Obecny poziom to ";
+    string errorNoteTwo = ", więc dany komunikat nie może być pokazany";
+    
+    string getLevel(int lvl)
+    {
+        string toReturn = "poziom to " + levelList[lvl];
+        return toReturn;
+    }
+
+    void levelDisplay(int whichLevel, string message, bool writeToFile, )
+    {
+        if (level >= whichLevel)
+        {
+            if (writeToFile == false)
+            {
+                cout << "Wywołany " + getLevel(0) << endl;
+                cout << messageNote << message << endl;
+            }
+            else
+            {
+                //wpisywanie do pliku
+            }
+
+        }
+        else
+        {
+            cout << errorNoteOne << levelList[level] << errorNoteTwo << endl;
+        }
+    }
 
     
 public:
@@ -46,16 +103,12 @@ public:
         levelName = levelList[level];
     }
 
-    ~Dziennik()
-    {
-        delete levelList;
-    }
 
-
-    void displayLevel()
+    void displayCurrentLevel()
     {
-        cout << "Current level is " << levelList[level] << endl;
+        cout << "Obecny " << getLevel(level)  << endl;
     }
+    
     
     void setLevel(int lvl)
     {
@@ -66,6 +119,19 @@ public:
         else
         {
             cout << "Nie można zmienić poziom poza zakres!" << endl;
+        }
+    }
+
+    //funkcja pozwala na mieszanie małych i dużych liter
+    void setLevel(string lvl)
+    {
+        if (findLevel(lvl) != -1)
+        {
+            level = findLevel(lvl);
+        }
+        else
+        {
+            cout << "Podany poziom nie istnieje!" << endl;
         }
     }
 
@@ -93,13 +159,68 @@ public:
         }
     }
 
+    
+    void severe()
+    {
+
+    }
+
+    void warning()
+    {
+
+    }
+
+    void info()
+    {
+
+    }
+
+    void config()
+    {
+
+    }
+
+    void fine()
+    {
+
+    }
+
+    void finer()
+    {
+
+    }
+
+    void finest(string message, bool writeToFile)
+    {
+        if (level >= 0)
+        {
+            if (writeToFile == false)
+            {
+                cout << "Wywołany " + getLevel(0) << endl;
+                cout << messageNote << message << endl;
+            }
+            else
+            {
+
+            }
+            
+        }
+        else
+        {
+            cout << errorNoteOne << levelList[level] << errorNoteTwo << endl;
+        }
+    }
 
 };
 
 int main()
 {
+    setlocale(LC_ALL, "polish");
 
-    Dziennik note = Dziennik(5);
-    note.XD();
+    Dziennik note = Dziennik(3);
 
+    note.displayCurrentLevel();
+
+
+    return 0;
 }
