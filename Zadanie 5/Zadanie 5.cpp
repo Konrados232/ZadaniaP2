@@ -6,6 +6,7 @@ Proszę w programie zaimplementować testowe wywołania. */
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <locale>
 
 using namespace std;
@@ -65,18 +66,24 @@ private:
         return toReturn;
     }
 
-    void levelDisplay(int whichLevel, string message, bool writeToFile, )
+    void levelDisplay(int whichLevel, string message, bool writeToFile, string fileName)
     {
-        if (level >= whichLevel)
+        if (whichLevel >= level)
         {
             if (writeToFile == false)
             {
-                cout << "Wywołany " + getLevel(0) << endl;
+                cout << "Wywołany " + getLevel(whichLevel) << endl;
                 cout << messageNote << message << endl;
             }
             else
             {
-                //wpisywanie do pliku
+                cout << "Zapisano wiadomość do pliku " << fileName << endl;
+                //dopisywanie do pliku
+                fstream noteFile;
+                noteFile.open(fileName, ios_base::app);
+                noteFile << "Wywołany " + getLevel(0) << endl;
+                noteFile << messageNote << message << endl;
+                noteFile.close();
             }
 
         }
@@ -137,7 +144,7 @@ public:
 
     void increaseLevel()
     {
-        if (level >= 0 && level < levelCount)
+        if (level >= 0 && level < (levelCount - 1))
         {
             level++;
         }
@@ -149,7 +156,7 @@ public:
 
     void decreaseLevel()
     {
-        if (level > 0 && level <= levelCount)
+        if (level > 0 && level <= (levelCount - 1))
         {
             level--;
         }
@@ -158,57 +165,40 @@ public:
             cout << "Nie można zmienić poziom poza zakres!" << endl;
         }
     }
-
     
-    void severe()
+    void severe(string message, bool writeToFile, string fileName)
     {
-
+        levelDisplay(6, message, writeToFile, fileName);
     }
 
-    void warning()
+    void warning(string message, bool writeToFile, string fileName)
     {
-
+        levelDisplay(5, message, writeToFile, fileName);
     }
 
-    void info()
+    void info(string message, bool writeToFile, string fileName)
     {
-
+        levelDisplay(4, message, writeToFile, fileName);
     }
 
-    void config()
+    void config(string message, bool writeToFile, string fileName)
     {
-
+        levelDisplay(3, message, writeToFile, fileName);
     }
 
-    void fine()
+    void fine(string message, bool writeToFile, string fileName)
     {
-
+        levelDisplay(2, message, writeToFile, fileName);
     }
 
-    void finer()
+    void finer(string message, bool writeToFile, string fileName)
     {
-
+        levelDisplay(1, message, writeToFile, fileName);
     }
 
-    void finest(string message, bool writeToFile)
+    void finest(string message, bool writeToFile, string fileName)
     {
-        if (level >= 0)
-        {
-            if (writeToFile == false)
-            {
-                cout << "Wywołany " + getLevel(0) << endl;
-                cout << messageNote << message << endl;
-            }
-            else
-            {
-
-            }
-            
-        }
-        else
-        {
-            cout << errorNoteOne << levelList[level] << errorNoteTwo << endl;
-        }
+        levelDisplay(0, message, writeToFile, fileName);
     }
 
 };
@@ -217,10 +207,40 @@ int main()
 {
     setlocale(LC_ALL, "polish");
 
-    Dziennik note = Dziennik(3);
+    Dziennik note = Dziennik(5);
+    string notePath = "NoteFile.txt";
+
+    //przykładowe działanie
+    note.displayCurrentLevel();
+    note.increaseLevel();
+    note.increaseLevel();
+    note.displayCurrentLevel();
+
+    for (int i = 0; i < 7; i++)
+    {
+        note.decreaseLevel();
+    }
 
     note.displayCurrentLevel();
 
+    note.setLevel(3);
+    note.displayCurrentLevel();
 
-    return 0;
+    note.setLevel("SEVERE");
+    note.displayCurrentLevel();
+
+    note.warning("Text", false, "");
+    note.displayCurrentLevel();
+
+    note.setLevel(1);
+    note.severe("Level warning", false, "");
+    note.displayCurrentLevel();
+    
+    note.setLevel("FINER");
+    note.finest("Not good", true, notePath);
+
+    note.config("Moderate", true, notePath);
+
+    note.displayCurrentLevel();
+
 }
