@@ -133,7 +133,7 @@ public:
     Statek();
     Statek(Kapitan k, string n, int z);
     Statek(const Statek& inny);
-    ~Statek();
+    virtual ~Statek();
 
     Kapitan get_kapitan() const;
     
@@ -149,8 +149,10 @@ public:
     int get_id();
 
     void set_racje(int r);
-    void oblicz_zywnosc();
-    void oblicz_zywnosc(bool desery);
+    virtual void oblicz_zywnosc();
+    virtual void oblicz_zywnosc(bool desery);
+
+    virtual int get_zywnosc();
 };
 
 
@@ -191,7 +193,7 @@ Statek::Statek(const Statek& inny)
 Statek::~Statek()
 {
     //zwolnienie pamięci dynamicznej
-    delete tab_i;
+    delete[] tab_i;
 }
 
 Kapitan Statek::get_kapitan() const
@@ -273,6 +275,12 @@ void Statek::oblicz_zywnosc(bool desery)
 }
 
 
+int Statek::get_zywnosc()
+{
+    return racje;
+}
+
+
 class StatekPasazerski : public virtual Statek
 {
 private:
@@ -287,8 +295,8 @@ public:
 
     int liczba_osob() const;
     
-    void oblicz_zywnosc();
-    void oblicz_zywnosc(bool desery);
+    void oblicz_zywnosc() override;
+    void oblicz_zywnosc(bool desery) override;
 
 };
 
@@ -339,12 +347,25 @@ void StatekPasazerski::oblicz_zywnosc(bool desery)
 class Mysliwiec : public virtual Statek
 {
 private:
-    int liczba_wiezyczek = 1;
+    int liczba_wiezyczek;
 
 public:
+    Mysliwiec();
+    ~Mysliwiec();
+
     int get_wiezyczki() const;
 
 };
+
+Mysliwiec::Mysliwiec()
+{
+    liczba_wiezyczek = 1;
+}
+
+Mysliwiec::~Mysliwiec()
+{
+
+}
 
 int Mysliwiec::get_wiezyczki() const
 {
@@ -353,11 +374,62 @@ int Mysliwiec::get_wiezyczki() const
 
 class TransportowiecBojowy : public StatekPasazerski, public Mysliwiec
 {
-    
+private:
+    int liczba_armat;
+public:
+
+    TransportowiecBojowy();
+    ~TransportowiecBojowy();
+    int get_armaty() const;
 };
+
+
+TransportowiecBojowy::TransportowiecBojowy()
+{
+    liczba_armat = 5;
+}
+
+TransportowiecBojowy::~TransportowiecBojowy()
+{
+
+}
+
+int TransportowiecBojowy::get_armaty() const
+{
+    return liczba_armat;
+}
 
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    Statek* statek1 = new Statek();
+    cout << statek1->get_zaloga() << endl;;
+    statek1->werbunek(3);
+    cout << statek1->get_zaloga() << endl;;
+
+
+    StatekPasazerski* statek2 = new StatekPasazerski();
+
+    cout << statek2->get_zaloga() << endl;
+    statek2->werbunek(40);
+    cout << statek2->get_zaloga() << endl;
+
+    statek2->oblicz_zywnosc(true);
+
+    Kapitan* kapitan1 = new Kapitan("Adam", "Małysz", 29, true);
+
+    cout << statek1->get_kapitan();
+
+    cout << kapitan1->get_imie() << endl;
+    cout << kapitan1->get_nazwisko() << endl;
+
+
+    Mysliwiec* mysliwiec = new Mysliwiec();
+
+    cout << mysliwiec->get_wiezyczki() << endl;
+
+    delete statek1;
+    delete statek2;
+    delete kapitan1;
+    delete mysliwiec;
 }
