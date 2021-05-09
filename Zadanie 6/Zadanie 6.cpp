@@ -122,8 +122,10 @@ private:
     int* tab_i;
 
     int id;
-    static int obecne_id;
+    int obecne_id;
     void set_id();
+
+    int racje;
 
     friend ostream& operator<<(ostream& strumien, const Statek& statek);
 
@@ -143,8 +145,12 @@ public:
 
     void werbunek(int liczba);
 
-    static int static_get_id();
+    int static_get_id();
     int get_id();
+
+    void set_racje(int r);
+    void oblicz_zywnosc();
+    void oblicz_zywnosc(bool desery);
 };
 
 
@@ -244,7 +250,30 @@ ostream& operator << (ostream & strumien, const Statek & statek)
     return strumien;
 }
 
-class StatekPasazerski : public Statek
+void Statek::set_racje(int r)
+{
+    racje = r;
+}
+
+void Statek::oblicz_zywnosc()
+{
+    racje = 3 * zaloga;
+}
+
+void Statek::oblicz_zywnosc(bool desery)
+{
+    if (desery)
+    {
+        racje = 4 * zaloga;
+    }
+    else
+    {
+        racje = 3 * zaloga;
+    }
+}
+
+
+class StatekPasazerski : public virtual Statek
 {
 private:
     int pasazerowie;
@@ -257,11 +286,15 @@ public:
     void set_pasazerowie(int p);
 
     int liczba_osob() const;
+    
+    void oblicz_zywnosc();
+    void oblicz_zywnosc(bool desery);
+
 };
 
 StatekPasazerski::StatekPasazerski()
 {
-
+    pasazerowie = 10;
 }
 
 StatekPasazerski::~StatekPasazerski()
@@ -285,6 +318,43 @@ int StatekPasazerski::liczba_osob() const
     return pasazerowie + get_zaloga();
 }
 
+void StatekPasazerski::oblicz_zywnosc()
+{
+    set_racje(3 * (get_zaloga() + pasazerowie));
+}
+
+void StatekPasazerski::oblicz_zywnosc(bool desery)
+{
+    if (desery)
+    {
+        set_racje(4 * (get_zaloga() + pasazerowie));
+    }
+    else
+    {
+        set_racje(3 * (get_zaloga() + pasazerowie));
+    }
+}
+
+
+class Mysliwiec : public virtual Statek
+{
+private:
+    int liczba_wiezyczek = 1;
+
+public:
+    int get_wiezyczki() const;
+
+};
+
+int Mysliwiec::get_wiezyczki() const
+{
+    return liczba_wiezyczek;
+}
+
+class TransportowiecBojowy : public StatekPasazerski, public Mysliwiec
+{
+    
+};
 
 
 int main()
