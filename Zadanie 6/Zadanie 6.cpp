@@ -402,6 +402,8 @@ int TransportowiecBojowy::get_armaty() const
 
 int main()
 {
+    setlocale(LC_ALL, "polish");
+
     Statek* statek1 = new Statek();
     cout << statek1->get_zaloga() << endl;;
     statek1->werbunek(3);
