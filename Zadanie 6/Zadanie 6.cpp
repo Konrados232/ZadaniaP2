@@ -133,6 +133,8 @@ public:
     Statek(const Statek& inny);
     ~Statek();
 
+    Kapitan get_kapitan() const;
+    
     int get_zaloga() const;
     void set_zaloga(int z);
 
@@ -186,6 +188,11 @@ Statek::~Statek()
     delete tab_i;
 }
 
+Kapitan Statek::get_kapitan() const
+{
+    return kapitan;
+}
+
 int Statek::get_zaloga() const
 {
     ++liczba_wywolan_get_zaloga;
@@ -237,7 +244,46 @@ ostream& operator << (ostream & strumien, const Statek & statek)
     return strumien;
 }
 
+class StatekPasazerski : public Statek
+{
+private:
+    int pasazerowie;
+public:
 
+    StatekPasazerski();
+    ~StatekPasazerski();
+
+    int get_pasazerowie() const;
+    void set_pasazerowie(int p);
+
+    int liczba_osob() const;
+};
+
+StatekPasazerski::StatekPasazerski()
+{
+
+}
+
+StatekPasazerski::~StatekPasazerski()
+{
+
+}
+
+int StatekPasazerski::get_pasazerowie() const
+{
+    return pasazerowie;
+}
+
+void StatekPasazerski::set_pasazerowie(int p)
+{
+    pasazerowie = p;
+}
+
+
+int StatekPasazerski::liczba_osob() const
+{
+    return pasazerowie + get_zaloga();
+}
 
 
 
