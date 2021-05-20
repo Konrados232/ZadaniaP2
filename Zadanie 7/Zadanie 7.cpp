@@ -43,8 +43,6 @@ private:
     const int numOfCols = 3;
     float** data;
 
-
-
 public:
 
     Matrix2D()
@@ -353,6 +351,10 @@ public:
         
         return *this;
     }
+
+    friend istream& operator>>(istream& input, Matrix2D& m);
+    friend ostream& operator <<(ostream& output, const Matrix2D& m);
+
 };
 
 
@@ -384,6 +386,25 @@ Matrix2D& operator *=(Matrix2D& m, const int& a)
     }
     return m;
 }
+
+ostream& operator <<(ostream& output, const Matrix2D& m)
+{
+    output << m.data[0][0] << " " << m.data[0][1] << " " << m.data[0][2] << endl
+        << m.data[1][0] << " " << m.data[1][1] << " " << m.data[1][2] << endl
+        << m.data[2][0] << " " << m.data[2][1] << " " << m.data[2][2] << endl;
+
+    return output;
+}
+
+istream& operator >> (istream& input, Matrix2D& m)
+{
+    input >> m.data[0][0] >> m.data[0][1] >> m.data[0][2]
+        >> m.data[1][0] >> m.data[1][1] >> m.data[2][2]
+        >> m.data[2][0] >> m.data[2][1] >> m.data[2][2];
+
+    return input;
+}
+
 
 
 
@@ -417,10 +438,12 @@ int main()
     Matrix2D* base = new Matrix2D();
     Matrix2D* base2 = new Matrix2D(4);
     Matrix2D* base3 = new Matrix2D(tempData);
-    Matrix2D* base4 = new Matrix2D(6);
+    Matrix2D* base4 = new Matrix2D(8);
 
-    base->displayMatrix();
-    base3->displayMatrix();
+    cout << *base;
+    cout << *base2;
+    cout << *base3;
+    cout << *base4;
 
 
 
