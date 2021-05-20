@@ -163,6 +163,16 @@ public:
     }
 
 
+    float getNumOfRows() const
+    {
+        return numOfRows;
+    }
+
+    float getNumOfCols() const
+    {
+        return numOfCols;
+    }
+
     //ustawianie i zwracanie konkretnych elementów macierzy
     void setNumberAt(int whichRow, int whichCol, float number)
     {
@@ -245,15 +255,66 @@ public:
         return *this;
     }
 
+    //preinkrementacja
+
     Matrix2D& operator ++()
     {
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                this->data[i][j] += 1;
+            }
+        }
 
+        return *this;
     }
 
     Matrix2D& operator --()
     {
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                this->data[i][j] -= 1;
+            }
+        }
 
+        return *this;
     }
+
+    //postinkrementacja
+
+    Matrix2D operator++(int)
+    {
+        Matrix2D temp = *this;
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                this->data[i][j] += 1;
+            }
+        }
+
+        return temp;
+    }
+
+    Matrix2D operator--(int)
+    {
+        Matrix2D temp = *this;
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                this->data[i][j] -= 1;
+            }
+        }
+
+        return temp;
+    }
+
 
     Matrix2D operator *(const Matrix2D& m)
     {
@@ -292,22 +353,40 @@ public:
         
         return *this;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 };
+
+
+//mnożenie przez liczbę całkowitą
+
+Matrix2D operator *(const Matrix2D& m, const int& a)
+{
+    return Matrix2D(m.getNumberAt(0,0) * a, m.getNumberAt(0, 1) * a, m.getNumberAt(0, 2) * a,
+        m.getNumberAt(1, 0) * a, m.getNumberAt(1, 1) * a, m.getNumberAt(1, 2) * a, 
+        m.getNumberAt(2, 0) * a, m.getNumberAt(2, 1) * a, m.getNumberAt(2, 2) * a);
+}
+
+Matrix2D operator *(const int& a, const Matrix2D& m)
+{
+    return Matrix2D(m.getNumberAt(0, 0) * a, m.getNumberAt(0, 1) * a, m.getNumberAt(0, 2) * a,
+        m.getNumberAt(1, 0) * a, m.getNumberAt(1, 1) * a, m.getNumberAt(1, 2) * a,
+        m.getNumberAt(2, 0) * a, m.getNumberAt(2, 1) * a, m.getNumberAt(2, 2) * a);
+}
+
+
+Matrix2D& operator *=(Matrix2D& m, const int& a)
+{
+    for (int i = 0; i < m.getNumOfRows(); i++)
+    {
+        for (int j = 0; j < m.getNumOfCols(); j++)
+        {
+            m.setNumberAt(i, j, m.getNumberAt(i, j) * a);
+        }
+    }
+    return m;
+}
+
+
+
 
 
 
@@ -317,17 +396,38 @@ int main()
 {
     setlocale(LC_ALL, "polish");
 
+    srand((unsigned)time(0));
+
+    float** tempData = new float* [3];
+    for (int i = 0; i < 3; i++)
+    {
+        tempData[i] = new float[3];
+    }
+
+    //losowo generowane liczby
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            tempData[i][j] = 1 + (rand() % 20);
+        }
+    }
+
 
     Matrix2D* base = new Matrix2D();
+    Matrix2D* base2 = new Matrix2D(4);
+    Matrix2D* base3 = new Matrix2D(tempData);
+    Matrix2D* base4 = new Matrix2D(6);
 
     base->displayMatrix();
+    base3->displayMatrix();
+
 
 
 
     delete base;
+    delete base2;
+    delete base3;
+    delete base4;
 
-
-
-
-    cout << "Hello World!\n";
 }
