@@ -53,7 +53,6 @@ public:
 
         for (int i = 0; i < numOfRows; i++)
         {
-            cout << "XD " << endl;
             data[i] = new float[numOfCols];
         }
 
@@ -66,15 +65,51 @@ public:
 
         for (int i = 0; i < numOfRows; i++)
         {
-            cout << "XD " << endl;
+        
             data[i] = new float[numOfCols];
         }
 
         fillMatrix(number);
-
     }
 
+    Matrix2D(float** newData)
+    {
+        data = new float* [numOfRows];
 
+        for (int i = 0; i < numOfRows; i++)
+        {
+            data[i] = new float[numOfCols];
+        }
+
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                data[i][j] = newData[i][j];
+            }
+        }
+    }
+
+    Matrix2D(float one, float two, float three, float four, float five, float six, float seven, float eight, float nine)
+    {
+        data = new float* [numOfRows];
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            data[i] = new float[numOfCols];
+        }
+
+        data[0][0] = one;
+        data[0][1] = two;
+        data[0][2] = three;
+        data[1][0] = four;
+        data[1][1] = five;
+        data[1][2] = six;
+        data[2][0] = seven;
+        data[2][1] = eight;
+        data[2][2] = nine;
+    }
 
 
     ~Matrix2D()
@@ -158,7 +193,6 @@ public:
         swapElementsAt(2, 1, 1, 2);
     }
 
-
     //przeciążenie operatorów
 
     Matrix2D& operator =(const Matrix2D m)
@@ -175,7 +209,9 @@ public:
 
     Matrix2D operator +(const Matrix2D m) const
     {
-
+        return Matrix2D(this->data[0][0] + m.data[0][0], this->data[0][1] + m.data[0][1], this->data[0][2] + m.data[0][2],
+            this->data[1][0] + m.data[1][0], this->data[1][1] + m.data[1][1], this->data[1][2] + m.data[1][2],
+            this->data[2][0] + m.data[2][0], this->data[2][1] + m.data[2][1], this->data[2][2] + m.data[2][2]);
     }
 
     Matrix2D& operator +=(const Matrix2D& m)
@@ -192,7 +228,9 @@ public:
 
     Matrix2D operator -(const Matrix2D& m)
     {
-
+        return Matrix2D(this->data[0][0] - m.data[0][0], this->data[0][1] - m.data[0][1], this->data[0][2] - m.data[0][2],
+            this->data[1][0] - m.data[1][0], this->data[1][1] - m.data[1][1], this->data[1][2] - m.data[1][2],
+            this->data[2][0] - m.data[2][0], this->data[2][1] - m.data[2][1], this->data[2][2] - m.data[2][2]);
     }
 
     Matrix2D& operator -=(const Matrix2D& m)
@@ -217,14 +255,42 @@ public:
 
     }
 
-    Matrix2D& operator *(const Matrix2D& m) const
+    Matrix2D operator *(const Matrix2D& m)
     {
+        float finalResult[3][3] = { 0 };
 
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    finalResult[i][j] += this->data[i][k] * m.data[k][j];
+                }
+            }
+        }
+
+        return Matrix2D(finalResult[0][0], finalResult[0][1], finalResult[0][2],
+            finalResult[1][0], finalResult[1][1], finalResult[1][2],
+            finalResult[2][0], finalResult[2][1], finalResult[2][2]);
     }
 
-    Matrix2D& operator *=(const Matrix2D& m) const
+    Matrix2D& operator *=(const Matrix2D& m)
     {
+        this->resetMatrix();
 
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    this->data[i][j] += this->data[i][k] * m.data[k][j];
+                }
+            }
+        }
+        
+        return *this;
     }
 
 
@@ -249,6 +315,9 @@ public:
 
 int main()
 {
+    setlocale(LC_ALL, "polish");
+
+
     Matrix2D* base = new Matrix2D();
 
     base->displayMatrix();
