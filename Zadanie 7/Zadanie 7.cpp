@@ -33,6 +33,7 @@ Należy zadbać o poprawną obsługę obiektów klasy Macierz2D.
 
 #include <iostream>
 #include <string>
+#include <initializer_list>
 
 using namespace std;
 
@@ -127,6 +128,38 @@ public:
             }
         }
     }
+
+    
+    Matrix2D(const initializer_list <float>& newData)
+    {
+        data = new float* [numOfRows];
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            data[i] = new float[numOfCols];
+        }
+
+        int i = 0;
+        int j = 0;
+
+        for (auto element : newData)
+        {
+            if (j == 3)
+            {
+                j = 0;
+                i++;
+            }
+
+            float temp = element;
+
+            data[i][j] = temp;
+
+            j++;
+        }
+    }
+    
+
+    
 
     ~Matrix2D()
     {
@@ -390,7 +423,7 @@ public:
 
         if (first < second)
         {
-            return true
+            return true;
         }
         else
         {
@@ -405,7 +438,7 @@ public:
 
         if (first > second)
         {
-            return true
+            return true;
         }
         else
         {
@@ -485,6 +518,7 @@ int main()
 
     
 
+    //przykładowe wykonania
     Matrix2D* base = new Matrix2D();
     Matrix2D* base2 = new Matrix2D(4);
     Matrix2D* base3 = new Matrix2D(tempData);
@@ -530,24 +564,52 @@ int main()
     *main = *main + 10;
     cout << *main;
 
+    main->transponseMatrix();
+    cout << *main;
+
+    main->setMatrixAsIdentityMatrix();
+    cout << *main;
     
-
-    //Matrix2D main2;
-
-    //cin >> main2;
-
-    //cout << main2;
-
-
-
-
-
 
     delete base;
     delete base2;
     delete base3;
     delete base4;
     delete main;
+    
+
+    //sortowanie    
+    Matrix2D* mainArray = new Matrix2D[3];
+
+    mainArray[0] = Matrix2D({ 9,7,9,1,2,3,70,32,43 });
+    mainArray[1] = Matrix2D({ 9.0,9.0,9.0,8.0,8.0,8.0,7.0,7.0,7.0 });
+    mainArray[2] = Matrix2D({ 1,2,3,4,5,6,7,8,9 });
+
+    cout << mainArray[0].getDeterminant() << endl;
+    cout << mainArray[1].getDeterminant() << endl;
+    cout << mainArray[2].getDeterminant() << endl;
+
+    
+
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            if (mainArray[j] > mainArray[j + 1])
+            {
+                Matrix2D temp = mainArray[j];
+                mainArray[j] = mainArray[j + 1];
+                mainArray[j + 1] = temp;
+            }
+        }
+    }
+
+    cout << mainArray[0];
+    cout << mainArray[1];
+    cout << mainArray[2];
+
+
+    delete[] mainArray;    
 
 
     for (int i = 0; i < 3; i++)
