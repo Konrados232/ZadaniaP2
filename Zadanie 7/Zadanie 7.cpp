@@ -109,6 +109,24 @@ public:
         data[2][2] = nine;
     }
 
+    Matrix2D(const Matrix2D& m)
+    {
+        data = new float* [numOfRows];
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            data[i] = new float[numOfCols];
+        }
+
+
+        for (int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                data[i][j] = m.data[i][j];
+            }
+        }
+    }
 
     ~Matrix2D()
     {
@@ -181,6 +199,15 @@ public:
     {
         return this->data[whichRow][whichCol];
     }
+
+    //obliczanie wyznacznika
+    float getDeterminant() const
+    {
+        float det = data[0][2] * data[1][1] * data[2][0] + data[0][0] * data[1][2] * data[2][1] + data[0][1] * data[1][0] * data[2][2];
+        return det;
+    }
+
+
 
     //tworzenie macierzy jednostkowej
     void setMatrixAsIdentityMatrix()
@@ -352,9 +379,39 @@ public:
         return *this;
     }
 
-    friend istream& operator>>(istream& input, Matrix2D& m);
+    friend istream& operator >>(istream& input, Matrix2D& m);
     friend ostream& operator <<(ostream& output, const Matrix2D& m);
+    
 
+    bool operator <(const Matrix2D& m) const
+    {
+        int first = this->getDeterminant();
+        int second = m.getDeterminant();
+
+        if (first < second)
+        {
+            return true
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool operator >(const Matrix2D& m) const
+    {
+        int first = this->getDeterminant();
+        int second = m.getDeterminant();
+
+        if (first > second)
+        {
+            return true
+        }
+        else
+        {
+            return false;
+        }
+    }
 };
 
 
@@ -399,19 +456,11 @@ ostream& operator <<(ostream& output, const Matrix2D& m)
 istream& operator >> (istream& input, Matrix2D& m)
 {
     input >> m.data[0][0] >> m.data[0][1] >> m.data[0][2]
-        >> m.data[1][0] >> m.data[1][1] >> m.data[2][2]
+        >> m.data[1][0] >> m.data[1][1] >> m.data[1][2]
         >> m.data[2][0] >> m.data[2][1] >> m.data[2][2];
 
     return input;
 }
-
-
-
-
-
-
-
-
 
 int main()
 {
@@ -434,6 +483,7 @@ int main()
         }
     }
 
+    
 
     Matrix2D* base = new Matrix2D();
     Matrix2D* base2 = new Matrix2D(4);
@@ -445,6 +495,51 @@ int main()
     cout << *base3;
     cout << *base4;
 
+    Matrix2D* main = new Matrix2D();
+
+    *main = *base2;
+    cout << *main;
+
+    *main += *base3;
+    cout << *main;
+
+    *main -= *base4;
+    cout << *main;
+
+    *main *= *base;
+    cout << *main;
+
+    (*main)++;
+    cout << *main;
+    
+    (*main)--;
+    cout << *main;
+
+    *main = (*main + *base2);
+    cout << *main;
+
+    *main = (*main - *base3);
+    cout << *main;
+
+    *main = (*main * *base2);
+    cout << *main;
+
+    *main = 3 * *main;
+    cout << *main;
+
+    *main = *main + 10;
+    cout << *main;
+
+    
+
+    //Matrix2D main2;
+
+    //cin >> main2;
+
+    //cout << main2;
+
+
+
 
 
 
@@ -452,5 +547,17 @@ int main()
     delete base2;
     delete base3;
     delete base4;
+    delete main;
 
+
+    for (int i = 0; i < 3; i++)
+    {
+        delete[] tempData[i];
+    }
+
+    delete[] tempData;
+
+
+
+    int ll;
 }
